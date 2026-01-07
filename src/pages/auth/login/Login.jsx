@@ -83,7 +83,7 @@ export default function Login() {
     <section className='py-12 '>
          <div className="container">
           <div className=' max-w-md  mx-auto p-5 shadow-lg dark:bg-gray-800  '>
-            <h1 className='text-center '>register</h1>
+            <h1 className='text-center '>login</h1>
          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2 ">
    
              {/* ****** email ******* */}
