@@ -6,9 +6,11 @@ import { AiOutlineLike } from "react-icons/ai";
 import { FaComment, FaShare } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ComponentPostHeader from "./ComponentPostHeader";
+import AddComment from "./AddComment";
 
 
 export function PostsItem({post , showAllComments = false}) {
+console.log(post);
 
 const {
   user,
@@ -18,6 +20,7 @@ const {
   comments = [],
   body
 } = post || {}
+
 
 
 
@@ -57,15 +60,17 @@ const {
   ) : (
     <ComponentPostHeader
       user={{
-        ...comments[0].commentCreator,
-        createdAt: comments[0].createdAt,
-        body: comments[0].content
+        ...comments[comments.length-1].commentCreator,
+        createdAt: comments[comments.length-1].createdAt,
+        body: comments[comments.length-1].content
       }}
       iscomment={true}
     />
   )
 )}
 
+
+<AddComment post={_id}/>
     </Card>
   );
 }

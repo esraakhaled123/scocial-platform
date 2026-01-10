@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { Button, Card, Checkbox, Label, Textarea, TextInput } from 'flowbite-react'
-import React, { useState } from 'react'
+import { Button, Card, Checkbox, Label, Textarea, TextInput, Toast } from 'flowbite-react'
+import React from 'react'
 import { useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaCamera } from 'react-icons/fa'
@@ -8,11 +8,31 @@ import { FaCamera } from 'react-icons/fa'
 import AppButton from '../shared/Appbutton/AppButton'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { toast } from 'react-toastify'
+
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
 export default function Add({onPostCreated}) {
 
  const fileInputRef  = useRef()
+const {mutate}=useMutation({
+  mutationFn: AddPost,
+  onSuccess: () => {
 
+
+    reset();
+    fileInputRef.current.value = "";
+
+    toast.success('post created successfully', {
+      theme: "dark",
+    });
+    onPostCreated()
+  },
+  onError:()=>{
+     toast.error('post created faild', {
+      theme: "dark",
+    });
+  }
+});
 const schema = z.object({
       body:z.string(),
     //   image:z.object()
@@ -33,7 +53,7 @@ const {
 });
 
 
- async function createPost(values){
+ async function AddPost(values){
     console.log(values.body ,fileInputRef.current.files[0]);
  const formData = new FormData()  
  formData.append("body",values.body) 
@@ -42,40 +62,24 @@ const {
        
  }
 
-   const {data}=  await axios.post(`${import.meta.env.VITE_BASE_URL}/posts`, 
+return  await axios.post(`${import.meta.env.VITE_BASE_URL}/posts`, 
     formData
     ,{
     headers:{
         token:localStorage.getItem('token')
     }
    }) 
-   if (data.message ==='success') {
-    console.log(data);
-    
-     reset();
-    fileInputRef.current.value = "";
-    toast.success('post created successfuly' ,{
-      theme:"dark"
-      
-    })
-    // window.location.reload()
-    onPostCreated()
-   }else{
-    toast.error('something went wrong' ,{
-      theme:"dark"
-    })
-   
-    
+  
    }
   
    
- }
+
 
   return  <section className='pb-4'>
     <div className=" container lg:max-w-3xl mx-auto">
        
         <Card className='mb-0'>
-      <form onSubmit={handleSubmit(createPost)}  className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(mutate)}  className="flex flex-col gap-4">
         <div>
           <div className="mb-2 block">
             <Label htmlFor="post">post some thing</Label>

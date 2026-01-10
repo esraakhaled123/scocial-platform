@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { PostsItem } from './PostsItem'
-import axios from 'axios';
 import { AuthContext } from '../Context/AuthContext';
 
-export default function PostsList({ error , posts}) {
+export default function PostsList({ error , data ,isLoading}) {
 
   const {userData}=useContext(AuthContext)
   console.log(userData);
@@ -12,13 +11,13 @@ export default function PostsList({ error , posts}) {
 
   return <>
   <section className='pt-0'>
-     <div className="container lg:max-w-3xl mx-auto">
-
-  </div>
+     { isLoading && <div className="container text-4xl  text-center mx-auto">
+           loading.....
+  </div>}
     <div className=" container lg:max-w-3xl mx-auto">
        <div className='flex flex-col gap-4'>
         {error&& <div className='text-center text-lg text-red-800'>{error}</div>}
-      {posts && posts.map((post)=><PostsItem key={post._id} post={post}/>)}
+      {data && data.map((post)=><PostsItem key={post._id} post={post}/>)}
        </div>
     </div>
   </section>
